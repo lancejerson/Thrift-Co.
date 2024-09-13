@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thrift Co. Expenses</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Thrift Co. Profit Loss Counter</a>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        Input Product
+      </div>
+      <div class="card-body">
+        <form id="expenseForm">
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <input type="text" class="form-control" id="itemName" placeholder="Item Number/Name">
+            </div>
+            <div class="form-group col-md-4">
+              <input type="number" step="0.01" class="form-control" id="priceSold" placeholder="Price Sold">
+            </div>
+            <div class="form-group col-md-4">
+              <input type="number" step="0.01" class="form-control" id="priceBought" placeholder="Price Bought">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Product</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Table to Display the Results -->
+    <table class="table table-hover mt-4">
+      <thead>
+        <tr>
+          <th>Item Number/Name</th>
+          <th>Price Sold</th>
+          <th>Price Bought</th>
+          <th>Profit/Loss</th>
+        </tr>
+      </thead>
+      <tbody id="expenseTableBody">
+        <!-- Rows will be added here dynamically -->
+      </tbody>
+    </table>
+
+    <!-- Section to display total profit/loss -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5>Total Profit/Loss: <span id="totalProfitLoss">0.00</span></h5>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let totalProfitLoss = 0; // Initialize the total profit/loss
+
+    document.getElementById('expenseForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Get input values from the form
+      let productNumber = document.getElementById('itemName').value;
+      let priceSold = parseFloat(document.getElementById('priceSold').value);
+      let priceBought = parseFloat(document.getElementById('priceBought').value);
+
+      // Calculate Profit/Loss for the current product
+      let profitLoss = priceSold - priceBought;
+
+      // Check if the input values are valid
+      if (isNaN(priceSold) || isNaN(priceBought) || !productNumber) {
+        alert("Please fill out all fields with valid numbers.");
+        return;
+      }
+
+      // Update the total profit/loss
+      totalProfitLoss += profitLoss;
+
+      // Add a new row to the table
+      let tableBody = document.getElementById('expenseTableBody');
+      let newRow = document.createElement('tr');
+
+      newRow.innerHTML = `
+        <td>${productNumber}</td>
+        <td>${priceSold.toFixed(2)}</td>
+        <td>${priceBought.toFixed(2)}</td>
+        <td>${profitLoss.toFixed(2)}</td>
+      `;
+
+      tableBody.appendChild(newRow);
+
+      // Update the displayed total profit/loss
+      document.getElementById('totalProfitLoss').innerText = totalProfitLoss.toFixed(2);
+
+      // Clear the form for new entries
+      document.getElementById('expenseForm').reset();
+    });
+  </script>
+
+</body>
+</html>
